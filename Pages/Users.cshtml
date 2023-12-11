@@ -1,0 +1,30 @@
+﻿@page
+@model ClickerWebApp.Pages.UsersModel
+@{
+    ViewData["Title"] = "Users";
+}
+<h1>@ViewData["Title"]</h1>
+
+<a href="/Users/Create">New User</a>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.users)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Username</td>
+                <td>
+                    <a href="/Users/Edit?id=@item.Id">Edit</a>
+                    <a href="/Users/Delete?id=@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p>WIP: This page will show Users.</p>

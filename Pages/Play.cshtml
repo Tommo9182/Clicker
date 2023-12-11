@@ -1,0 +1,102 @@
+﻿@page
+@model ClickerWebApp.Pages.PlayModel
+@{
+    ViewData["Title"] = "Play";
+}
+
+<div class="text-center box-container">
+    <h1 id="select-your-time">Select Your Time</h1>
+    <div id="time-buttons">
+        <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(10, this)">10s</button>
+        <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(30, this)">30s</button>
+        <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(60, this)">60s</button><br />
+    </div>
+    <p class="timer" style="visibility:hidden;" id="timer">0</p><br/>
+    <a class="clicker-button general-button" style="visibility:hidden;" onclick="incrementer();" id="increment-button">Click!</a>
+    <div class="results-box" style="visibility:hidden;" id="results-box">
+        <h1>Results</h1><br />
+        <div id="results">
+            <p id="time-result"></p>
+            <p id="click-result"></p>
+            <p id="cpm-result"></p>
+            <p id="leaderboard-place"></p>
+        </div>
+    </div>
+    <div class="result-buttons-container" style="visibility:hidden;" id="result-buttons">
+        <button class="result-button general-button" onclick="window.location.reload();">Retry</button>
+        <button class="result-button general-button">Save</button>
+    </div>
+</div>
+
+<script>
+
+    let numClicks = 0;
+    let started = false;
+    let time = 0;
+    let timeRemaining = 0;
+    const timer = document.getElementById("timer");
+    let timerInterval = null;
+
+    function incrementer() {
+        if (!started) {
+            started = true;
+            timer.style.visibility = "visible";
+            timer.innerHTML = timeRemaining;
+            timerInterval = setInterval(updateCountdown, 1000);
+        }
+        numClicks++;
+        document.getElementById("increment-button").innerHTML = numClicks;
+    }
+    function timeButton(seconds, button){ 
+        var timeButtons = document.getElementById("time-buttons").children;
+        const incrementButton = document.getElementById("increment-button");
+        
+        document.getElementById("select-your-time").style.visibility = "hidden";
+
+        time = seconds;
+        timeRemaining = seconds;
+
+        button.style.backgroundColor = "green";
+        for (let i = 0; i < timeButtons.length; i++) {
+            if (timeButtons[i] != button){
+                timeButtons[i].style.backgroundColor = "#efefef";
+            }
+            timeButtons[i].disabled = true;
+        }
+        incrementButton.style.visibility = "visible";
+    }
+    function updateCountdown() {
+        timeRemaining--;
+        timer.innerHTML = timeRemaining;
+        if(timeRemaining <= 3){
+            timer.style.color = "red";
+        }
+        if(timeRemaining == 0 && timerInterval !== null){
+            clearInterval(timerInterval);
+            timer.innerHTML = "Time's Up!";
+            timer.style.color = "black";
+            results();
+        }
+    }
+    function results() {
+        const incrementButton = document.getElementById("increment-button")
+        const resultsBox = document.getElementById("results-box");
+        const resultButtons = document.getElementById("result-buttons");
+        const results = document.getElementById("results").children;
+
+        incrementButton.style.visibility = "hidden";
+        incrementButton.style.display = "none";
+        resultsBox.style.visibility = "visible";
+        resultsBox.style.display = "flex";
+        resultButtons.style.visibility = "visible";
+        resultButtons.style.display = "flex";
+
+        document.getElementById("time-result").innerHTML = `Time: ${time}`;
+        document.getElementById("click-result").innerHTML = `Total Clicks: ${numClicks}`;
+        var clicksPerMinute = 60 / time * numClicks;
+        document.getElementById("cpm-result").innerHTML = `Clicks Per Minute: ${clicksPerMinute}`;
+        document.getElementById("leaderboard-place").innerHTML = `WIP`;
+
+    }
+
+</script>
