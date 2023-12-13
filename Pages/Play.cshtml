@@ -4,10 +4,10 @@
     ViewData["Title"] = "Play";
 }
 
-<div class="text-center box-container">
+<div class="text-center box-container other-box-container">
     <h1 id="select-your-time">Select Your Time</h1>
     <div id="time-buttons">
-        <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(10, this)">10s</button>
+        <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(1, this)">10s</button>
         <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(30, this)">30s</button>
         <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(60, this)">60s</button><br />
     </div>
@@ -20,11 +20,12 @@
             <p id="click-result"></p>
             <p id="cpm-result"></p>
             <p id="leaderboard-place"></p>
+            <input class="login-input" type="text" name="name" id="name-input"/>
         </div>
     </div>
     <div class="result-buttons-container" style="visibility:hidden;" id="result-buttons">
         <button class="result-button general-button" onclick="window.location.reload();">Retry</button>
-        <button class="result-button general-button">Save</button>
+        <button class="result-button general-button" onclick="saveScore()">Save</button>
     </div>
 </div>
 
@@ -87,7 +88,7 @@
         incrementButton.style.visibility = "hidden";
         incrementButton.style.display = "none";
         resultsBox.style.visibility = "visible";
-        resultsBox.style.display = "flex";
+        resultsBox.style.display = "block";
         resultButtons.style.visibility = "visible";
         resultButtons.style.display = "flex";
 
@@ -97,6 +98,43 @@
         document.getElementById("cpm-result").innerHTML = `Clicks Per Minute: ${clicksPerMinute}`;
         document.getElementById("leaderboard-place").innerHTML = `WIP`;
 
+    }
+
+    function saveScore(){
+        const nameInput = document.getElementById("name-input");
+        if (time !== 0) {
+            var clicksPerMinute = 60 / time * numClicks;
+        } else {
+            console.error("Error: Time cannot be zero for clicksPerMinute calculation.");
+            return;
+        }
+        var name = nameInput.value;
+        console.log(numClicks);
+        console.log(clicksPerMinute);
+        console.log(time);
+        if (name == "") {
+            nameInput.style.borderColor = "red";
+        }
+        else {
+            console.log(name);
+
+            $.ajax({
+                type: "POST",
+                url: "/Score/SaveScore",
+                data:{
+                    name: name,
+                    clicks: numClicks,
+                    time: time,
+                    clicksPerMinute: clicksPerMinute
+                },
+                success: function (response) {
+                    console.log("Score saved successfully");
+                },
+                error: function(error){
+                    console.error("Error saving score: ", error);
+                }
+            })
+        }
     }
 
 </script>

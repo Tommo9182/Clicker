@@ -6,22 +6,8 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome to Clicker!</h1>
-    <div class="box-container">
+    <div class="box-container home-page-box-container">
         <a style="float:left;" class="home-page-button general-button" asp-area="" asp-page="/Play">Play</a>
         <a style="float:right;" class="home-page-button general-button" asp-area="" asp-page="/Leaderboard">Leaderboard</a>
-        <a style="float:left;" class="home-page-button general-button" asp-area="" asp-page="/Users">Users</a>
-        <a style="float:right;" class="home-page-button general-button" onclick="login();">Login</a>
-    </div>
-    <div style="visibility:hidden;" class="login-box" id="login">
-        <form>Username</form>
-        <form>Password</form>
-        
     </div>
 </div>
-<script>
-    function login() {
-        let loginBox = document.getElementById("login");
-        console.log(loginBox);
-        loginBox.style.visibility = "visible";
-    }
-</script>

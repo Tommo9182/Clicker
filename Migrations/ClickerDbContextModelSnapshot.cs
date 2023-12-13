@@ -21,7 +21,7 @@ namespace ClickerWebApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ClickerWebApp.Model.User", b =>
+            modelBuilder.Entity("ClickerWebApp.Model.Score", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,17 +29,22 @@ namespace ClickerWebApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Password")
+                    b.Property<int>("clicks")
+                        .HasColumnType("int");
+
+                    b.Property<float>("clicksPerMinute")
+                        .HasColumnType("real");
+
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("time")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Scores");
                 });
 #pragma warning restore 612, 618
         }

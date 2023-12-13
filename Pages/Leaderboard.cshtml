@@ -6,3 +6,29 @@
 <h1>@ViewData["Title"]</h1>
 
 <p>WIP: This page will show the leaderboard.</p>
+<div class="box-container other-box-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Clicks</th>
+                <th>Time</th>
+                <th>Clicks Per Minute</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model.scores)
+            {
+                <tr>
+                    <td>@item.name</td>
+                    <td>@item.clicks</td>
+                    <td>@item.time</td>
+                    <td>@Math.Round(item.clicksPerMinute)</td>
+                    <td>
+                        <a href="/Scores/Delete?id=@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

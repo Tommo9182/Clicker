@@ -28,26 +28,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Leaderboard">Leaderboard</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Users">Users</a>
-                        </li>
                     </ul>
-                    <form class="form-group input-group mx-auto" id="navbar-search-form">
+                    <form class="form-group input-group" id="navbar-search-form">
                         <input class="form-control" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark">Register</a>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
