@@ -1,4 +1,4 @@
-﻿namespace ClickerWebApp.Model
+﻿namespace Clicker.Models
 {
     public class Score
     {

@@ -1,7 +1,6 @@
-﻿@page
-@model LeaderboardModel
-@{
+﻿@{
     ViewData["Title"] = "Leaderboard";
+    var scores = ViewBag.Scores;
 }
 <h1>@ViewData["Title"]</h1>
 
@@ -17,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(var item in Model.scores)
+            @foreach(var item in scores)
             {
                 <tr>
                     <td>@item.name</td>

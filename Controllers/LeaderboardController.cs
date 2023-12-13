@@ -1,19 +1,22 @@
-﻿using ClickerWebApp.Model;
+﻿using Clicker.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 
-namespace ClickerWebApp.Pages
+namespace Clicker.Controllers
 {
-    public class LeaderboardModel : PageModel
+    public class LeaderboardController : Controller
     {
-        public List<Score> scores = new List<Score>();
-        public void OnGet()
+
+        [HttpGet]
+        public IActionResult Index()
         {
+            Debug.WriteLine("HELLO");
+            List<Score> scores = new List<Score>();
+
             try
             {
                 String connectionString = "Data Source=.;Initial Catalog=ClickerDB;Integrated Security=True;TrustServerCertificate=True;";
-                
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -22,8 +25,8 @@ namespace ClickerWebApp.Pages
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            while (reader.Read()) 
-                            { 
+                            while (reader.Read())
+                            {
                                 Score score = new Score();
                                 score.Id = reader.GetInt32(0);
                                 score.clicks = reader.GetInt32(1);
@@ -35,10 +38,13 @@ namespace ClickerWebApp.Pages
                         }
                     }
                 }
+                ViewBag.Scores = scores;
+                return View();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception: " + ex.ToString());
+                Debug.WriteLine("Exception: " + ex.ToString());
+                return BadRequest("Error retrieving scores");
             }
         }
     }

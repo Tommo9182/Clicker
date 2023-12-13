@@ -1,13 +1,14 @@
-﻿using ClickerWebApp.Model;
+﻿using Clicker.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using static System.Formats.Asn1.AsnWriter;
 using System.Diagnostics;
 
-namespace ClickerWebApp.Controllers
+namespace Clicker.Controllers
 {
     public class ScoreController : Controller
     {
+
         [HttpPost]
         public IActionResult SaveScore(Score scoreData)
         {
@@ -18,7 +19,6 @@ namespace ClickerWebApp.Controllers
                 time = scoreData.time,
                 clicksPerMinute = scoreData.clicksPerMinute
             };
-            Debug.WriteLine("hello"+scoreData.name.GetType() + "" + scoreData.clicks.GetType() + "" + scoreData.time.GetType() + "" + score.clicksPerMinute.GetType());
             
 
             //save to database
