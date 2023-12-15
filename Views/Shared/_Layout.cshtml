@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] - Clicker</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ClickerWebApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Clicker.styles.css" asp-append-version="true" />
 </head>
 <body class="custom-font">
     <header>
@@ -26,7 +26,7 @@
                             <a class="nav-link text-dark" href="/Play/Index">Play</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="/Leaderboard/Index">Leaderboard</a>
+                            <a class="nav-link text-dark" href="/Leaderboard/Index/time=0&page=0">Leaderboard</a>
                         </li>
                     </ul>
                     <form class="form-group input-group" id="navbar-search-form">
@@ -46,7 +46,7 @@
 
     <footer class="border-top footer text-muted">
         <div style="font-family: sans-serif;" class="container">
-            &copy; 2023 - Clicker - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2023 - Clicker - <a href="/Home/Privacy">Privacy</a>
         </div>
     </footer>
 

@@ -2,8 +2,9 @@
     ViewData["Title"] = "Play";
 }
 
+<h1 class="text-center">@ViewData["title"]</h1>
 <div class="text-center box-container other-box-container">
-    <h1 id="select-your-time">Select Your Time</h1>
+    <h2 id="select-your-time">Select Your Time</h2>
     <div id="time-buttons">
         <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(1, this)">10s</button>
         <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(30, this)">30s</button>
@@ -12,7 +13,7 @@
     <p class="timer" style="visibility:hidden;" id="timer">0</p><br/>
     <a class="clicker-button general-button" style="visibility:hidden;" onclick="incrementer();" id="increment-button">Click!</a>
     <div class="results-box" style="visibility:hidden;" id="results-box">
-        <h1>Results</h1><br />
+        <h2 style="font-size:34px;">Results</h2><br />
         <div id="results">
             <p id="time-result"></p>
             <p id="click-result"></p>
@@ -46,24 +47,7 @@
         numClicks++;
         document.getElementById("increment-button").innerHTML = numClicks;
     }
-    function timeButton(seconds, button){ 
-        var timeButtons = document.getElementById("time-buttons").children;
-        const incrementButton = document.getElementById("increment-button");
-        
-        document.getElementById("select-your-time").style.visibility = "hidden";
-
-        time = seconds;
-        timeRemaining = seconds;
-
-        button.style.backgroundColor = "green";
-        for (let i = 0; i < timeButtons.length; i++) {
-            if (timeButtons[i] != button){
-                timeButtons[i].style.backgroundColor = "#efefef";
-            }
-            timeButtons[i].disabled = true;
-        }
-        incrementButton.style.visibility = "visible";
-    }
+    
     function updateCountdown() {
         timeRemaining--;
         timer.innerHTML = timeRemaining;

@@ -1,33 +1,106 @@
 ﻿@{
     ViewData["Title"] = "Leaderboard";
-    var scores = ViewBag.Scores;
+    List<Score> scores = ViewBag.Scores;
+    int time = ViewBag.Time;
+    int page = ViewBag.Page;
+    int startingPos = page * 10;
+    int endingPos = startingPos + 10;
+    List<int> times = new List<int> { 0, 10, 30, 60 };
 }
-<h1>@ViewData["Title"]</h1>
+<h1 class="text-center">@ViewData["Title"]</h1>
 
-<p>WIP: This page will show the leaderboard.</p>
+<div class="leaderboard-time-buttons" id="leaderboard-time-buttons">
+    @foreach(int value in times)
+    {
+        String displayValue = value + "s";
+        String color = "#efefef";
+        String url = "/Leaderboard/Index?time=" + value + "&page=" + 0;
+        if(value == time)
+        {
+            color = "green";
+        }
+        if (value == 0)
+        {
+            <a class="time-button general-button leaderboard-time-button" style="background-color:@color;" href="@url">All</a>
+        }
+        else
+        {
+            <a class="time-button general-button leaderboard-time-button" style="background-color:@color;" href="@url">@displayValue</a>
+        }
+
+    }
+</div>
 <div class="box-container other-box-container">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Clicks</th>
-                <th>Time</th>
-                <th>Clicks Per Minute</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var item in scores)
-            {
+    @if (scores.Count == 0)
+    {
+        <h2 class="no-scores-message">No Scores Found</h2>
+    }
+    else
+    {
+        String firstUrl = "/Leaderboard/Index?time=" + time + "&page=" + 0;
+        String nextUrl = "/Leaderboard/Index?time=" + time + "&page=" + (page + 1);
+        String previousUrl = "/Leaderboard/Index?time=" + time + "&page=" + (page-1);
+        String lastUrl = "/Leaderboard/Index?time=" + time + "&page=" + (Math.Floor((scores.Count-1) / 10f));
+        String pageNumber = "Page: " + page;
+
+        <table class="table">
+        
+            <thead>
                 <tr>
-                    <td>@item.name</td>
-                    <td>@item.clicks</td>
-                    <td>@item.time</td>
-                    <td>@Math.Round(item.clicksPerMinute)</td>
-                    <td>
-                        <a href="/Scores/Delete?id=@item.Id">Delete</a>
-                    </td>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Clicks Per Minute</th>
+                    <th>Clicks</th>
+                    <th>Time</th>
                 </tr>
+            </thead>
+            <tbody class="scrollable-leaderboard">
+                @for(int i = startingPos; i < endingPos; i++)
+                {
+                    if(i == scores.Count)
+                    {
+                        break;
+                    }
+                    var item = scores[i];
+                    int position = i + 1;
+                    if (item.time == time || time == 0)
+                    {
+                        <tr>
+                            <td>@position</td>
+                            <td>@item.name</td>
+                            <td>@Math.Round(item.clicksPerMinute)</td>
+                            <td>@item.clicks</td>
+                            <td>@item.time</td>
+                            <td>
+                                <button class="general-button leaderboard-delete-button" onclick="deleteScore(@item.Id)">Delete</button> <!--Once users implemented, change to only show delete button on users scores-->
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <button onclick="deleteAllScores()">Delete all</button> <!--Temporary Dev Button-->
+        <div class="leaderboard-page-buttons">
+            <a class="time-button general-button leaderboard-time-button" href="@firstUrl" id="first-button">First</a>
+            <a class="time-button general-button leaderboard-time-button" href="@previousUrl" id="previous-button">Previous</a>
+            <p class="leaderboard-page-number">@pageNumber</p>
+            <a class="time-button general-button leaderboard-time-button" href="@nextUrl" id="next-button">Next</a>
+            <a class="time-button general-button leaderboard-time-button" href="@lastUrl" id="last-button">Last</a>
+            @if (page == 0)
+            {
+                <script>
+                    document.getElementById("first-button").style.visibility = "hidden";
+                    document.getElementById("previous-button").style.visibility = "hidden";
+                </script>
             }
-        </tbody>
-    </table>
+            @if (page * 10 + 10 >= scores.Count)
+            {
+                <script>
+                    document.getElementById("next-button").style.visibility = "hidden";
+                    document.getElementById("last-button").style.visibility = "hidden";
+                </script>
+            }
+        </div>
+        
+    }
 </div>

@@ -39,6 +39,10 @@ general-button:focus{
     outline: none;
 }
 
+h1{
+    font-size: 70px;
+    position:relative;
+}
 .center{
     position: absolute;
     top: 50%;
@@ -46,18 +50,11 @@ general-button:focus{
     transform: translate(-50%, -50%);
 }
 
-.home-page-box-container{
-    height: 350px;
-}
-
-.other-box-container{
-    height: 660px;
-}
-
 .box-container {
     position: absolute;
     justify-content: center;
     top: 25%;
+    height: 660px;
     width: 1300px;
     outline: 5px solid black;
     box-shadow: 15px 15px rgba(1, 1, 1, 0.8);
@@ -187,6 +184,46 @@ general-button:focus{
     margin-top: 2.5px;
     margin-left: 2.5px;
     margin-right: 21.75px;
+}
+
+.leaderboard-time-button {
+    font-weight: bold;
+    font-family: sans-serif;
+    width: 75px;
+    height: 25px;
+    outline: 2px solid black;
+    text-align:center;
+}
+
+.leaderboard-time-buttons{
+    width: 400px;
+    margin-left: 450px;
+    margin-top: 120px;
+    justify-content:center;
+
+}
+
+.leaderboard-delete-button {
+    background-color: red;
+    border-radius: 10px;
+    box-shadow: 3px 3px rgba(1, 1, 1, 0.8);
+}
+
+.leaderboard-page-buttons{
+    position: absolute;
+    width: 1300px;
+    text-align: center;
+    display: flex;
+    left: 425px;
+    bottom: 30px;
+}
+
+.leaderboard-page-number{
+    margin-right: 10px;
+}
+.no-scores-message{
+    position: relative;
+    text-align: center;
 }
 
 .login-box {

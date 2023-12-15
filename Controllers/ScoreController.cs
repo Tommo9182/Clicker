@@ -8,23 +8,13 @@ namespace Clicker.Controllers
 {
     public class ScoreController : Controller
     {
+        private String connectionString = Globals.DatabaseConnectionString;
 
         [HttpPost]
         public IActionResult SaveScore(Score scoreData)
         {
-            Score score = new Score
-            {
-                name = scoreData.name,
-                clicks = scoreData.clicks,
-                time = scoreData.time,
-                clicksPerMinute = scoreData.clicksPerMinute
-            };
-            
-
-            //save to database
             try
             {
-                String connectionString = "Data Source=.;Initial Catalog=ClickerDB;Integrated Security=True;TrustServerCertificate=True;";
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -49,6 +39,56 @@ namespace Clicker.Controllers
             }
 
             return Ok(new { message = "Score saved successfully" });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int Id) {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    String query = "DELETE FROM Scores WHERE Id = @Id";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", Id);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("DELETE Exception: " + ex);
+                return BadRequest("Error deleting score");
+            }
+
+            return Ok(new { message = "Score deleted successfully" });
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteAll()
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    String query = "DELETE FROM Scores";
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("DELETE Exception: " + ex);
+                return BadRequest("Error deleting score");
+            }
+
+            return Ok(new { message = "Score deleted successfully" });
         }
     }
 }

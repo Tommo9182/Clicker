@@ -7,16 +7,15 @@ namespace Clicker.Controllers
 {
     public class LeaderboardController : Controller
     {
-
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int time, int page)
         {
-            Debug.WriteLine("HELLO");
             List<Score> scores = new List<Score>();
+
 
             try
             {
-                String connectionString = "Data Source=.;Initial Catalog=ClickerDB;Integrated Security=True;TrustServerCertificate=True;";
+                String connectionString = Globals.DatabaseConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
@@ -27,18 +26,26 @@ namespace Clicker.Controllers
                         {
                             while (reader.Read())
                             {
-                                Score score = new Score();
-                                score.Id = reader.GetInt32(0);
-                                score.clicks = reader.GetInt32(1);
-                                score.time = reader.GetInt32(2);
-                                score.name = reader.GetString(3);
-                                score.clicksPerMinute = 60 / reader.GetInt32(2) * reader.GetInt32(1);
-                                scores.Add(score);
+                                if (reader.GetInt32(2) == time || time == 0)
+                                {
+                                    Score score = new Score();
+                                    score.Id = reader.GetInt32(0);
+                                    score.clicks = reader.GetInt32(1);
+                                    score.time = reader.GetInt32(2);
+                                    score.name = reader.GetString(3);
+                                    score.clicksPerMinute = 60 / reader.GetInt32(2) * reader.GetInt32(1);
+                                    scores.Add(score);
+                                }
+                                
                             }
                         }
                     }
                 }
-                ViewBag.Scores = scores;
+                List<Score> sortedScores = scores.OrderBy(o => o.clicksPerMinute).ToList();
+                sortedScores.Reverse();
+                ViewBag.Scores = sortedScores;
+                ViewBag.Time = time;
+                ViewBag.Page = page;
                 return View();
             }
             catch (Exception ex)
