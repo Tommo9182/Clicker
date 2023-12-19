@@ -46,7 +46,7 @@ function deleteScore(Id) {
     })
 }
 
-function deleteAllScores() {
+function deleteAllScores() { //dev tool
     $.ajax({
         type: "DELETE",
         url: "/Score/DeleteAll",
@@ -59,3 +59,4 @@ function deleteAllScores() {
         }
     })
 }
+

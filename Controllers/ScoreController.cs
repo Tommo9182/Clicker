@@ -25,7 +25,7 @@ namespace Clicker.Controllers
                     {
                         command.Parameters.AddWithValue("@clicks", scoreData.clicks);
                         command.Parameters.AddWithValue("@time", scoreData.time);
-                        command.Parameters.AddWithValue("@name", scoreData.name);
+                        command.Parameters.AddWithValue("@user", scoreData.user);
                         command.Parameters.AddWithValue("@clicksPerMinute", scoreData.clicksPerMinute);
 
                         command.ExecuteNonQuery();

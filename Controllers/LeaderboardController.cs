@@ -1,4 +1,5 @@
 ﻿using Clicker.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
@@ -32,7 +33,7 @@ namespace Clicker.Controllers
                                     score.Id = reader.GetInt32(0);
                                     score.clicks = reader.GetInt32(1);
                                     score.time = reader.GetInt32(2);
-                                    score.name = reader.GetString(3);
+                                    score.user = (IdentityUser)reader.GetValue(3);
                                     score.clicksPerMinute = 60 / reader.GetInt32(2) * reader.GetInt32(1);
                                     scores.Add(score);
                                 }
