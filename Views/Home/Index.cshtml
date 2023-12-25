@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity;
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Home page";
 }
@@ -8,16 +8,16 @@
 <div class="text-center">
     <h1 class="display-4">Welcome to Clicker!</h1>
     <div class="box-container">
-        <a style="float:left;" class="home-page-button general-button" href="Play/Index">Play</a>
+        <a style="float:left;" class="home-page-button general-button" href="/Play/Index">Play</a>
         <a style="float:right;" class="home-page-button general-button" href="/Leaderboard/Index/time=0&page=0">Leaderboard</a>
         <a style="float:left;" class="home-page-button general-button" href="/Users/Index">Users</a>
         @if (SignInManager.IsSignedIn(User))
         {
-            <a style="float:right;" class="home-page-button general-button" onclick="login();">Account</a> 
+            <a style="float:right;" class="home-page-button general-button" href="/Identity/Account/Manage">Account</a>
         }
         else
         {
-            <a style="float:right;" class="home-page-button general-button" onclick="login();">Login</a>
+            <a style="float:right;" class="home-page-button general-button" href="/Identity/Account/Login">Login</a>
         }
     </div>
 </div>

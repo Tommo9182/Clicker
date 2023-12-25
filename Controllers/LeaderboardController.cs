@@ -33,8 +33,9 @@ namespace Clicker.Controllers
                                     score.Id = reader.GetInt32(0);
                                     score.clicks = reader.GetInt32(1);
                                     score.time = reader.GetInt32(2);
-                                    score.user = (IdentityUser)reader.GetValue(3);
                                     score.clicksPerMinute = 60 / reader.GetInt32(2) * reader.GetInt32(1);
+                                    score.Username = reader.GetString(4);
+                                    score.ApplicationUserId = reader.GetString(5);
                                     scores.Add(score);
                                 }
                                 

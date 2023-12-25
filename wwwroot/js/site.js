@@ -1,21 +1,4 @@
-﻿function timeButton(seconds, button) {
-    var timeButtons = document.getElementById("time-buttons").children;
-    const incrementButton = document.getElementById("increment-button");
-
-    document.getElementById("select-your-time").style.visibility = "hidden";
-
-    time = seconds;
-    timeRemaining = seconds;
-
-    button.style.backgroundColor = "green";
-    for (let i = 0; i < timeButtons.length; i++) {
-        if (timeButtons[i] != button) {
-            timeButtons[i].style.backgroundColor = "#efefef";
-        }
-        timeButtons[i].disabled = true;
-    }
-    incrementButton.style.visibility = "visible";
-}
+﻿
 
 function leaderboardTimeButton(seconds, button) {
     var timeButtons = document.getElementById("leaderboard-time-buttons").children;

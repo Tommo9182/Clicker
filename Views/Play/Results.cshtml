@@ -1,0 +1,83 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    Score score = ViewBag.Score;
+    ApplicationUser? user = null;
+    string username = "";
+    string userId = "";
+    ViewData["Title"] = "Play";
+    if (SignInManager.IsSignedIn(User))
+    {
+        user = await UserManager.GetUserAsync(User);
+        username = await UserManager.GetUserNameAsync(user);
+        userId = await UserManager.GetUserIdAsync(user);
+    }
+}
+<h1 class="text-center">Results</h1>
+<div class="text-center box-container other-box-container">
+    <h2 class="text-center" style="font-size: 50px;">Time's up!</h2>
+    <hr />
+    <div class="results-box" id="results-box">
+        <h2 style="font-size:34px;">Results</h2><br />
+        <div id="results">
+            <p id="time-result">TIME: @score.time</p>
+            <p id="click-result">CLICKS: @score.clicks</p>
+            <p id="cpm-result">CLICKS PER MINUTE: @score.clicksPerMinute</p>
+            <p id="leaderboard-place">LEADERBOARD PLACE: WIP</p>
+            @if (!SignInManager.IsSignedIn(User))
+            {
+                <p style="color: red;">Must be logged in to save scores</p>
+            }
+        </div>
+    </div>
+    <div class="result-buttons-container" id="result-buttons">
+        <button class="result-button general-button" onclick="window.location.reload();">Retry</button>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <button class="result-button general-button" onclick="saveScore()">Save</button>
+        }
+        else
+        {
+            <button class="result-button general-button" onclick="login()">Login</button>
+
+        }
+    </div>
+</div>
+
+<script>
+    function saveScore() {
+        const currentUserName = @Json.Serialize(username);
+        const currentUserId = @Json.Serialize(userId);
+        if (time !== 0) {
+            var clicksPerMinute = 60 / time * numClicks;
+        } else {
+            console.error("Error: Time cannot be zero for clicksPerMinute calculation.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Score/SaveScore",
+            data: {
+                username: currentUserName,
+                ApplicationUserId: currentUserId,
+                clicks: numClicks,
+                time: time,
+                clicksPerMinute: clicksPerMinute
+            },
+            success: function (response) {
+                console.log("Score saved successfully");
+                window.location.reload();
+            },
+            error: function (error) {
+                console.error("Error saving score: ", error);
+            }
+        })
+    }
+
+    function login() {
+        window.location.href = "/Identity/Account/Login";
+    }
+
+</script>

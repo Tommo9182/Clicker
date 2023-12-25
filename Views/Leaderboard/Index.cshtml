@@ -1,10 +1,19 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
     ViewData["Title"] = "Leaderboard";
     List<Score> scores = ViewBag.Scores;
     int time = ViewBag.Time;
     int page = ViewBag.Page;
     int startingPos = page * 10;
     int endingPos = startingPos + 10;
+    string currentUsername = "";
+    if (SignInManager.IsSignedIn(User))
+    {
+        var currentUser = await UserManager.GetUserAsync(User);
+        currentUsername = await UserManager.GetUserNameAsync(currentUser);
+    }
     List<int> times = new List<int> { 0, 10, 30, 60 };
 }
 <h1 class="text-center">@ViewData["Title"]</h1>
@@ -67,13 +76,15 @@
                     {
                         <tr>
                             <td>@position</td>
-                            <td>@item.user</td>
+                            <td>@item.Username</td>
                             <td>@Math.Round(item.clicksPerMinute)</td>
                             <td>@item.clicks</td>
                             <td>@item.time</td>
-                            <td>
-                                <button class="general-button leaderboard-delete-button" onclick="deleteScore(@item.Id)">Delete</button> <!--Once users implemented, change to only show delete button on users scores-->
-                            </td>
+                            @if(currentUsername != "" && item.Username == currentUsername){
+                                <td>
+                                    <button class="general-button leaderboard-delete-button" onclick="deleteScore(@item.Id)">Delete</button>
+                                </td>
+                            }
                         </tr>
                     }
                 }

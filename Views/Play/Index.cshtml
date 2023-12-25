@@ -1,6 +1,19 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ApplicationUser? user = null;
+    string username = "";
+    string userId = "";
     ViewData["Title"] = "Play";
+    if (SignInManager.IsSignedIn(User))
+    {
+        user = await UserManager.GetUserAsync(User);
+        username = await UserManager.GetUserNameAsync(user);
+        userId = await UserManager.GetUserIdAsync(user);
+    }
 }
+    
 
 <h1 class="text-center">@ViewData["title"]</h1>
 <div class="text-center box-container other-box-container">
@@ -12,20 +25,6 @@
     </div>
     <p class="timer" style="visibility:hidden;" id="timer">0</p><br/>
     <a class="clicker-button general-button" style="visibility:hidden;" onclick="incrementer();" id="increment-button">Click!</a>
-    <div class="results-box" style="visibility:hidden;" id="results-box">
-        <h2 style="font-size:34px;">Results</h2><br />
-        <div id="results">
-            <p id="time-result"></p>
-            <p id="click-result"></p>
-            <p id="cpm-result"></p>
-            <p id="leaderboard-place"></p>
-            <input class="login-input" type="text" name="name" id="name-input"/>
-        </div>
-    </div>
-    <div class="result-buttons-container" style="visibility:hidden;" id="result-buttons">
-        <button class="result-button general-button" onclick="window.location.reload();">Retry</button>
-        <button class="result-button general-button" onclick="saveScore()">Save</button>
-    </div>
 </div>
 
 <script>
@@ -36,6 +35,25 @@
     let timeRemaining = 0;
     const timer = document.getElementById("timer");
     let timerInterval = null;
+
+    function timeButton(seconds, button) {
+        var timeButtons = document.getElementById("time-buttons").children;
+        const incrementButton = document.getElementById("increment-button");
+
+        document.getElementById("select-your-time").style.visibility = "hidden";
+
+        time = seconds;
+        timeRemaining = seconds;
+
+        button.style.backgroundColor = "green";
+        for (let i = 0; i < timeButtons.length; i++) {
+            if (timeButtons[i] != button) {
+                timeButtons[i].style.backgroundColor = "#efefef";
+            }
+            timeButtons[i].disabled = true;
+        }
+        incrementButton.style.visibility = "visible";
+    }
 
     function incrementer() {
         if (!started) {
@@ -49,6 +67,9 @@
     }
     
     function updateCountdown() {
+        const currentUserName = @Json.Serialize(username);
+        const currentUserId = @Json.Serialize(userId);
+
         timeRemaining--;
         timer.innerHTML = timeRemaining;
         if(timeRemaining <= 3){
@@ -58,64 +79,16 @@
             clearInterval(timerInterval);
             timer.innerHTML = "Time's Up!";
             timer.style.color = "black";
-            results();
-        }
-    }
-    function results() {
-        const incrementButton = document.getElementById("increment-button")
-        const resultsBox = document.getElementById("results-box");
-        const resultButtons = document.getElementById("result-buttons");
-        const results = document.getElementById("results").children;
 
-        incrementButton.style.visibility = "hidden";
-        incrementButton.style.display = "none";
-        resultsBox.style.visibility = "visible";
-        resultsBox.style.display = "block";
-        resultButtons.style.visibility = "visible";
-        resultButtons.style.display = "flex";
-
-        document.getElementById("time-result").innerHTML = `Time: ${time}`;
-        document.getElementById("click-result").innerHTML = `Total Clicks: ${numClicks}`;
-        var clicksPerMinute = 60 / time * numClicks;
-        document.getElementById("cpm-result").innerHTML = `Clicks Per Minute: ${clicksPerMinute}`;
-        document.getElementById("leaderboard-place").innerHTML = `WIP`;
-
-    }
-
-    function saveScore(){
-        const nameInput = document.getElementById("name-input");
-        if (time !== 0) {
-            var clicksPerMinute = 60 / time * numClicks;
-        } else {
-            console.error("Error: Time cannot be zero for clicksPerMinute calculation.");
-            return;
-        }
-        var name = nameInput.value;
-        console.log(numClicks);
-        console.log(clicksPerMinute);
-        console.log(time);
-        if (name == "") {
-            nameInput.style.borderColor = "red";
-        }
-        else {
-            console.log(name);
-
-            $.ajax({
-                type: "POST",
-                url: "/Score/SaveScore",
-                data:{
-                    name: name,
-                    clicks: numClicks,
-                    time: time,
-                    clicksPerMinute: clicksPerMinute
-                },
-                success: function (response) {
-                    console.log("Score saved successfully");
-                },
-                error: function(error){
-                    console.error("Error saving score: ", error);
-                }
-            })
+            const data = {
+                username: currentUserName,
+                ApplicationUserId: currentUserId,
+                clicks: numClicks,
+                time: time,
+                clicksPerMinute: (60 / time * numClicks)
+            };
+            const queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
+            window.location.href = "/Play/Results?" + queryString;
         }
     }
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using static System.Formats.Asn1.AsnWriter;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 
 namespace Clicker.Controllers
 {
@@ -10,7 +11,7 @@ namespace Clicker.Controllers
     {
         private String connectionString = Globals.DatabaseConnectionString;
 
-        [HttpPost]
+		[HttpPost]
         public IActionResult SaveScore(Score scoreData)
         {
             try
@@ -19,13 +20,14 @@ namespace Clicker.Controllers
                 {
                     connection.Open();
                     String query = "INSERT INTO Scores " +
-                                   "(clicks, time, name, clicksPerMinute) VALUES" +
-                                   "(@clicks, @time, @name, @clicksPerMinute);";
+                                   "(clicks, time, username, ApplicationUserId, clicksPerMinute) VALUES" +
+                                   "(@clicks, @time, @username, @ApplicationUserId, @clicksPerMinute);";
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
                         command.Parameters.AddWithValue("@clicks", scoreData.clicks);
                         command.Parameters.AddWithValue("@time", scoreData.time);
-                        command.Parameters.AddWithValue("@user", scoreData.user);
+                        command.Parameters.AddWithValue("@username", scoreData.Username);
+                        command.Parameters.AddWithValue("@ApplicationUserId", scoreData.ApplicationUserId);
                         command.Parameters.AddWithValue("@clicksPerMinute", scoreData.clicksPerMinute);
 
                         command.ExecuteNonQuery();

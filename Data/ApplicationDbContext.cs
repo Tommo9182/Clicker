@@ -5,15 +5,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Clicker.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Score> Scores { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-    }
+	}
 
 }
