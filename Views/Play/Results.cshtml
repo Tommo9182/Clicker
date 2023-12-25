@@ -49,8 +49,9 @@
     function saveScore() {
         const currentUserName = @Json.Serialize(username);
         const currentUserId = @Json.Serialize(userId);
-        if (time !== 0) {
-            var clicksPerMinute = 60 / time * numClicks;
+        const score = @Json.Serialize(score);
+        if (score.time !== 0) {
+            var clicksPerMinute = 60 / score.time * score.clicks;
         } else {
             console.error("Error: Time cannot be zero for clicksPerMinute calculation.");
             return;
@@ -62,13 +63,13 @@
             data: {
                 username: currentUserName,
                 ApplicationUserId: currentUserId,
-                clicks: numClicks,
-                time: time,
-                clicksPerMinute: clicksPerMinute
+                clicks: score.clicks,
+                time: score.time,
+                clicksPerMinute: score.clicksPerMinute
             },
             success: function (response) {
                 console.log("Score saved successfully");
-                window.location.reload();
+                window.location.href = "/Play/Index";
             },
             error: function (error) {
                 console.error("Error saving score: ", error);
