@@ -9,12 +9,10 @@ namespace Clicker.Data
     {
         public DbSet<Score> Scores { get; set; }
 
-
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
-
 	}
 
 }

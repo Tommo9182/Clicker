@@ -11,4 +11,29 @@
 else
 {
 	<h1 class="text-center">@ViewData["Title"]</h1>
+	<div class="box-container text-center">
+		@if(ViewBag.LeaderboardRank > 0)
+		{
+			<h2 class="text-center" style="font-size: 50px;">Leaderboard ranking: @ViewBag.LeaderboardRank</h2>
+			<hr />
+			<div class="small-box-container result-text">
+				<h2 style="font-size:34px;">User Info</h2>
+				<hr/>
+				<p>Highest Clicks Per Minute Score: @ViewBag.Scores[0].clicksPerMinute</p>
+				<p style="bottom:0;">Email: @ViewBag.User.Email</p>
+			</div>
+		}
+		else
+		{
+			<h2 class="text-center" style="font-size: 50px;">@ViewBag.User Has No Scores</h2>
+			<hr />
+			<div class="small-box-container result-text">
+				<h2 style="font-size:34px;">User Info</h2>
+				<hr />
+				<p style="bottom:0;">Email: @ViewBag.User.Email</p>
+			</div>
+		}
+
+	</div>
 }
+

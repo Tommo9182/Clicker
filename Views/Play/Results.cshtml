@@ -18,13 +18,14 @@
 <div class="text-center box-container other-box-container">
     <h2 class="text-center" style="font-size: 50px;">Time's up!</h2>
     <hr />
-    <div class="results-box" id="results-box">
+    <div class="small-box-container" id="results-box">
         <h2 style="font-size:34px;">Results</h2><br />
-        <div id="results">
+        <hr />
+        <div class="result-text" id="results">
             <p id="time-result">TIME: @score.time</p>
             <p id="click-result">CLICKS: @score.clicks</p>
             <p id="cpm-result">CLICKS PER MINUTE: @score.clicksPerMinute</p>
-            <p id="leaderboard-place">LEADERBOARD PLACE: WIP</p>
+            <p id="leaderboard-place">LEADERBOARD PLACE: @ViewBag.LeaderboardPlace</p>
             @if (!SignInManager.IsSignedIn(User))
             {
                 <p style="color: red;">Must be logged in to save scores</p>

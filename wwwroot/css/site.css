@@ -142,7 +142,7 @@ h1{
     margin-bottom: -10px;
 }
 
-.results-box {
+.small-box-container {
     position: relative;
     justify-content: center;
     margin-left: 325px;
@@ -152,6 +152,10 @@ h1{
     outline: 3px solid black;
     box-shadow: 10px 10px rgba(1, 1, 1, 0.8);
     border-radius: 25px;
+}
+
+.result-text{
+    font-size: 20px;
 }
 
 .result-buttons-container{

@@ -1,4 +1,5 @@
-﻿using Clicker.Models;
+﻿using Clicker.Data;
+using Clicker.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -10,10 +11,12 @@ namespace Clicker.Controllers
     public class UsersController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _dbContext;
 
-        public UsersController(UserManager<ApplicationUser> userManager)
+        public UsersController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
+            _dbContext = context;
         }
 
 		[HttpGet]
@@ -28,12 +31,17 @@ namespace Clicker.Controllers
 					.Include(u => u.Scores)
                     .SingleOrDefaultAsync(u => u.UserName == username);
 
+				List<Score> scores = _dbContext.Scores
+					.Where(s => s.Username == username)
+					.OrderByDescending(s => s.clicksPerMinute)
+					.ToList();
+
 				if (user != null)
 				{
 					ViewBag.UserFound = true;
 					ViewBag.User = user;
-					ViewBag.Scores = user.Scores;
-					Debug.WriteLine("Hello"+user.Scores.Count);
+					ViewBag.Scores = scores;
+                    ViewBag.LeaderboardRank = GetBestLeaderboardRank(username);
 
 
 				}
@@ -46,5 +54,31 @@ namespace Clicker.Controllers
                 return BadRequest("Error retrieving scores");
             }
 		}
-	}
+
+        private int GetBestLeaderboardRank(string username)
+        {
+            try
+            {
+                List<Score> scores = _dbContext.Scores.
+                    OrderByDescending(s => s.clicksPerMinute).
+                    ToList();
+
+                for(int i = 0; i < scores.Count; i++)
+                {
+                    if (scores[i].Username == username)
+                    {
+                        return i + 1;
+                    }
+                }
+
+                return 0;
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception: " + ex.ToString());
+                return 0;
+            }
+        }
+    }
 }
