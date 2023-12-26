@@ -19,7 +19,7 @@
     <h2 class="text-center" style="font-size: 50px;">Time's up!</h2>
     <hr />
     <div class="small-box-container" id="results-box">
-        <h2 style="font-size:34px;">Results</h2><br />
+        <h2 style="font-size:34px;">Results</h2>
         <hr />
         <div class="result-text" id="results">
             <p id="time-result">TIME: @score.time</p>
@@ -33,7 +33,7 @@
         </div>
     </div>
     <div class="result-buttons-container" id="result-buttons">
-        <button class="result-button general-button" onclick="window.location.reload();">Retry</button>
+        <button class="result-button general-button" onclick="retry()">Retry</button>
         @if (SignInManager.IsSignedIn(User))
         {
             <button class="result-button general-button" onclick="saveScore()">Save</button>
@@ -70,7 +70,7 @@
             },
             success: function (response) {
                 console.log("Score saved successfully");
-                window.location.href = "/Play/Index";
+                //window.location.href = "/Play/Index";
             },
             error: function (error) {
                 console.error("Error saving score: ", error);
@@ -82,4 +82,7 @@
         window.location.href = "/Identity/Account/Login";
     }
 
+    function retry() {
+        window.location.href = "/Play/Index";
+    }
 </script>

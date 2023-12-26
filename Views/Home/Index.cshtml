@@ -3,6 +3,13 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Home page";
+    var username = "";
+    if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        username = await UserManager.GetUserNameAsync(user);
+    }
+
 }
 
 <div class="text-center">
@@ -10,13 +17,15 @@
     <div class="box-container">
         <a style="float:left;" class="home-page-button general-button" href="/Play/Index">Play</a>
         <a style="float:right;" class="home-page-button general-button" href="/Leaderboard/Index/time=0&page=0">Leaderboard</a>
-        <a style="float:left;" class="home-page-button general-button" href="/Users/Index">Users</a>
+        
         @if (SignInManager.IsSignedIn(User))
         {
-            <a style="float:right;" class="home-page-button general-button" href="/Identity/Account/Manage">Account</a>
+            <a style="float:left;" class="home-page-button general-button" href="/Users/User?username=@username">Account</a>
+            <a style="float:right;" class="home-page-button general-button" href="/Identity/Account/Manage">Settings</a>
         }
         else
         {
+            <a style="float:left;" class="home-page-button general-button" href="/Identity/Account/Register">Register</a>
             <a style="float:right;" class="home-page-button general-button" href="/Identity/Account/Login">Login</a>
         }
     </div>

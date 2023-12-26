@@ -27,6 +27,11 @@ button{
     outline: none;
 }
 
+h1 {
+    font-size: 70px;
+    position: relative;
+}
+
 .general-button {
     color: black;
     display: inline-block;
@@ -39,15 +44,20 @@ general-button:focus{
     outline: none;
 }
 
-h1{
-    font-size: 70px;
-    position:relative;
-}
 .center{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.clicker-logo {
+    width:100px;
+    height:40px;
+    background-color: #4CAF50;
+    outline: 2px solid black;
+    border-radius: 5px;
+    box-shadow: 3px 3px rgba(1, 1, 1, 0.8);
 }
 
 .box-container {
@@ -283,6 +293,20 @@ h1{
     left: 10px;
     border-radius: 15px;
     box-shadow: 3px 3px black;
+}
+
+.settings-button {
+    position: relative;
+    width: 100px;
+    bottom: 40px;
+    outline: 1px solid black;
+    border-radius: 8px;
+    box-shadow: 3px 3px black;
+
+}
+
+.settings-button:hover{
+    color:black;
 }
 
 #navbar-search-form {

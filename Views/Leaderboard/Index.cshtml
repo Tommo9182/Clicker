@@ -90,7 +90,6 @@
                 }
             </tbody>
         </table>
-        <button onclick="deleteAllScores()">Delete all</button> <!--Temporary Dev Button-->
         <div class="leaderboard-page-buttons">
             <a class="time-button general-button leaderboard-time-button" href="@firstUrl" id="first-button">First</a>
             <a class="time-button general-button leaderboard-time-button" href="@previousUrl" id="previous-button">Previous</a>
@@ -115,3 +114,37 @@
         
     }
 </div>
+
+<script>
+
+
+    function leaderboardTimeButton(seconds, button) {
+        var timeButtons = document.getElementById("leaderboard-time-buttons").children;
+
+        button.style.backgroundColor = "#4CAF50";
+        for (let i = 0; i < timeButtons.length; i++) {
+            if (timeButtons[i] != button) {
+                timeButtons[i].style.backgroundColor = "#efefef";
+            }
+        }
+        location.href(String.Format("Leaderboard?time={seconds}"));
+    }
+
+    function deleteScore(Id) {
+        $.ajax({
+            type: "DELETE",
+            url: "/Score/Delete",
+            data: {
+                Id: Id
+            },
+            success: function (response) {
+                console.log("Score deleted successfully");
+                location.reload();
+            },
+            error: function (error) {
+                console.error("Error deleting score: ", error);
+            }
+        })
+    }
+
+</script>

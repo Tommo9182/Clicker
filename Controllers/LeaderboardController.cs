@@ -19,7 +19,7 @@ namespace Clicker.Controllers
 		}
 
 		[HttpGet]
-		public IActionResult Index(int time, int page)
+		public IActionResult Index(int time = 0, int page = 0)
 		{
 			try
 			{

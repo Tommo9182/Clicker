@@ -23,6 +23,7 @@
         <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(30, this)">30s</button>
         <button class="time-button" style="font-family:sans-serif;" onclick="timeButton(60, this)">60s</button><br />
     </div>
+    <hr />
     <p class="timer" style="visibility:hidden;" id="timer">0</p><br/>
     <a class="clicker-button general-button" style="visibility:hidden;" onclick="incrementer();" id="increment-button">Click!</a>
 </div>
@@ -67,8 +68,8 @@
     }
     
     function updateCountdown() {
-        const currentUserName = @Json.Serialize(username);
-        const currentUserId = @Json.Serialize(userId);
+        
+        const incrementButton = document.getElementById("increment-button");
 
         timeRemaining--;
         timer.innerHTML = timeRemaining;
@@ -80,16 +81,20 @@
             timer.innerHTML = "Time's Up!";
             timer.style.color = "black";
 
-            const data = {
-                username: currentUserName,
-                ApplicationUserId: currentUserId,
-                clicks: numClicks,
-                time: time,
-                clicksPerMinute: (60 / time * numClicks)
-            };
-            const queryString = Object.keys(data).map(key => key + '=' + encodeURIComponent(data[key])).join('&');
-            window.location.href = "/Play/Results?" + queryString;
+            incrementButton.style.visibility = "hidden";
+
+            goToResults();
+            
         }
+    }
+
+    function goToResults() {
+        const currentUserName = @Json.Serialize(username);
+        const currentUserId = @Json.Serialize(userId);
+
+        let cpm = (60 / time * numClicks)
+        let url = "/Play/Results?username=" + currentUserName + "&ApplicationUserId=" + currentUserId + "&clicks=" + numClicks + "&time=" + time + "&clicksPerMinute=" + cpm
+        window.location.href = url;
     }
 
 </script>

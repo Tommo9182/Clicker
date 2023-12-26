@@ -3,7 +3,14 @@
 @inject UserManager<ApplicationUser> UserManager
 @{
 	ViewData["Title"] = ViewBag.Username;
+	var username = "";
+	if (SignInManager.IsSignedIn(User))
+	{
+		var user = await UserManager.GetUserAsync(User);
+		username = await UserManager.GetUserNameAsync(user);
+	}
 }
+
 @if (ViewBag.User == null)
 {
 	<h1 class="text-center">@ViewData["Title"] was not found</h1>
@@ -34,6 +41,10 @@ else
 			</div>
 		}
 
+		@if(ViewBag.Username == username)
+		{
+			<a class="general-button settings-button" href="/Identity/Account/Manage">Settings</a>
+		}
 	</div>
 }
 

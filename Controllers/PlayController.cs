@@ -18,6 +18,11 @@ namespace Clicker.Controllers
 			_dbContext = dbContext;
 		}
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Results(Score scoreData)
         {
@@ -26,10 +31,7 @@ namespace Clicker.Controllers
             return View();
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        
 
 		private int GetLeaderboardRank(Score score)
 		{
@@ -47,7 +49,7 @@ namespace Clicker.Controllers
 					}					
 				}
 
-				return scores.Count;
+				return scores.Count + 1;
 
 			}
 			catch (Exception ex)
