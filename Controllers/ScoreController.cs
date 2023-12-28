@@ -4,12 +4,25 @@ using Microsoft.Data.SqlClient;
 using static System.Formats.Asn1.AsnWriter;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using Clicker.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Clicker.Controllers
 {
     public class ScoreController : Controller
     {
         private String connectionString = Globals.DatabaseConnectionString;
+
+        private readonly ApplicationDbContext _dbContext;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ScoreController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        {
+            _dbContext = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
+        }
 
 		[HttpPost]
         public IActionResult SaveScore(Score scoreData)
@@ -44,53 +57,44 @@ namespace Clicker.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(int Id) {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
+        public async Task<IActionResult> Delete(int Id) {
 
-                    String query = "DELETE FROM Scores WHERE Id = @Id";
-                    using (SqlCommand command = new SqlCommand(query, connection))
+            if (_signInManager.IsSignedIn(User))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var username = await _userManager.GetUserNameAsync(user);
+                Score? score = _dbContext.Scores.FirstOrDefault(s => s.Id == Id);
+                if (score != null && score.Username == username)
+                {
+                    try
                     {
-                        command.Parameters.AddWithValue("@Id", Id);
-                        command.ExecuteNonQuery();
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            connection.Open();
+
+                            String query = "DELETE FROM Scores WHERE Id = @Id";
+                            using (SqlCommand command = new SqlCommand(query, connection))
+                            {
+                                command.Parameters.AddWithValue("@Id", Id);
+                                command.ExecuteNonQuery();
+                            }
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("DELETE Exception: " + ex);
+                        return BadRequest("Error deleting score");
+                    }
+
+                    return Ok(new { message = "Score deleted successfully" });
+                }
+                else
+                {
+                    return BadRequest("Can only delete your own scores");
                 }
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("DELETE Exception: " + ex);
-                return BadRequest("Error deleting score");
-            }
+            return BadRequest("Must be signed in to delete your scores");
 
-            return Ok(new { message = "Score deleted successfully" });
-        }
-
-        [HttpDelete]
-        public IActionResult DeleteAll()
-        {
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-
-                    String query = "DELETE FROM Scores";
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("DELETE Exception: " + ex);
-                return BadRequest("Error deleting score");
-            }
-
-            return Ok(new { message = "Score deleted successfully" });
         }
     }
 }
