@@ -91,10 +91,25 @@
     function goToResults() {
         const currentUserName = @Json.Serialize(username);
         const currentUserId = @Json.Serialize(userId);
+        let cpm = (60 / time * numClicks);
 
-        let cpm = (60 / time * numClicks)
-        let url = "/Play/Results?username=" + currentUserName + "&ApplicationUserId=" + currentUserId + "&clicks=" + numClicks + "&time=" + time + "&clicksPerMinute=" + cpm
-        window.location.href = url;
+        $.ajax({
+            type: 'POST',
+            url: '/Play/StoreResults', 
+            data: {
+                username: currentUserName,
+                userId: currentUserId,
+                clicks: numClicks,
+                time: time,
+                clicksPerMinute: cpm
+            },
+            success: function (response) {
+                window.location.href = '/Play/Results';
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
     }
 
 </script>

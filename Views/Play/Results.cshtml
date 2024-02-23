@@ -21,24 +21,32 @@
     <div class="small-box-container" id="results-box">
         <h2 style="font-size:34px;">Results</h2>
         <hr />
-        <div class="result-text" id="results">
-            <p id="time-result">TIME: @score.time</p>
-            <p id="click-result">CLICKS: @score.clicks</p>
-            <p id="cpm-result">CLICKS PER MINUTE: @score.clicksPerMinute</p>
-            <p id="leaderboard-place">LEADERBOARD PLACE: @ViewBag.LeaderboardPlace</p>
-            @if (!SignInManager.IsSignedIn(User))
-            {
-                <p style="color: red;">Must be logged in to save scores</p>
-            }
-        </div>
+        @if(score == null)
+        {
+            <p>No Score Available</p>
+        }
+        else
+        {
+            <div class="result-text" id="results">
+                <p id="time-result">TIME: @score.time</p>
+                <p id="click-result">CLICKS: @score.clicks</p>
+                <p id="cpm-result">CLICKS PER MINUTE: @score.clicksPerMinute</p>
+                <p id="leaderboard-place">LEADERBOARD PLACE: @ViewBag.LeaderboardPlace</p>
+                @if (!SignInManager.IsSignedIn(User))
+                {
+                    <p style="color: red;">Must be logged in to save scores</p>
+                }
+            </div>
+        }
+        
     </div>
     <div class="result-buttons-container" id="result-buttons">
         <button class="result-button general-button" onclick="retry()">Retry</button>
-        @if (SignInManager.IsSignedIn(User))
+        @if (SignInManager.IsSignedIn(User) && score != null)
         {
             <button class="result-button general-button" onclick="saveScore()">Save</button>
         }
-        else
+        else if(score != null)
         {
             <button class="result-button general-button" onclick="login()">Login</button>
 

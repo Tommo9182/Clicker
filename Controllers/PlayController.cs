@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Clicker.Models;
-using System.ComponentModel;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Clicker.Data;
+using System.Text;
+using System.Text.Json;
 
 namespace Clicker.Controllers
 {
@@ -23,17 +22,52 @@ namespace Clicker.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Results(Score scoreData)
+        [HttpPost]
+        public IActionResult StoreResults(Score scoreData)
         {
-			ViewBag.LeaderboardPlace = GetLeaderboardRank(scoreData);
-            ViewBag.Score = scoreData;
+            if (scoreData == null)
+            {
+                return BadRequest("No Available Score");
+            }
+
+            string serializedScore = JsonSerializer.Serialize(scoreData);
+
+            byte[] serializedBytes = Encoding.UTF8.GetBytes(serializedScore);
+
+            HttpContext.Session.Set("savedScore", serializedBytes);
+
+            return Ok(new { message = "Score saved successfully" });
+        }
+
+        [HttpGet]
+        public IActionResult Results()
+        {
+            byte[]? serializedBytes = HttpContext.Session.Get("savedScore");
+
+            if (serializedBytes != null && serializedBytes.Length > 0)
+            {
+                string serializedScore = Encoding.UTF8.GetString(serializedBytes);
+
+                Score? savedScore = JsonSerializer.Deserialize<Score>(serializedScore);
+
+                HttpContext.Session.Remove("savedScore");
+
+                if (savedScore != null)
+                {
+                    ViewBag.LeaderboardPlace = GetLeaderboardRank(savedScore);
+                    ViewBag.Score = savedScore;
+
+                    return View();
+                }
+                
+            }
+
+            ViewBag.Score = null;
             return View();
         }
 
-        
 
-		private int GetLeaderboardRank(Score score)
+        private int GetLeaderboardRank(Score score)
 		{
 			try
 			{
