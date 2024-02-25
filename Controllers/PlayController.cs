@@ -19,6 +19,11 @@ namespace Clicker.Controllers
 
         public IActionResult Index()
         {
+            Debug.WriteLine(HttpContext.Session.Get("savedScore"));
+            if(HttpContext.Session.Get("savedScore") != null)
+            {
+                return Redirect("/Play/Results");
+            }
             return View();
         }
 
@@ -50,8 +55,6 @@ namespace Clicker.Controllers
 
                 Score? savedScore = JsonSerializer.Deserialize<Score>(serializedScore);
 
-                HttpContext.Session.Remove("savedScore");
-
                 if (savedScore != null)
                 {
                     ViewBag.LeaderboardPlace = GetLeaderboardRank(savedScore);
@@ -66,6 +69,15 @@ namespace Clicker.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Retry()
+        {
+            if (HttpContext.Session.Get("savedScore") != null)
+            {
+                HttpContext.Session.Remove("savedScore");
+            }
+            return Redirect("/Play/Index");
+        }
 
         private int GetLeaderboardRank(Score score)
 		{

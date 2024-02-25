@@ -53,6 +53,10 @@ namespace Clicker.Controllers
                 return BadRequest("Error saving score");
             }
 
+            if (HttpContext.Session.Get("savedScore") != null)
+            {
+                HttpContext.Session.Remove("savedScore");
+            }
             return Ok(new { message = "Score saved successfully" });
         }
 
